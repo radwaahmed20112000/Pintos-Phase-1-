@@ -111,8 +111,6 @@ timer_sleep (int64_t ticks)
   int64_t  life_time = start + ticks;
   currentThread->sleepTicks = life_time;
 
-  //currentThread->sleepTicks = ticks;
- // currentThread->startSleeping = timer_ticks();
   list_insert_ordered(&blockedQueue,&currentThread->elem,ticks_compare,NULL);
   thread_block();
   intr_set_level(old_level);    
@@ -204,7 +202,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
     if(timer_ticks() >= t->sleepTicks){
       e = list_remove(&t->elem);
       thread_unblock(t);
-    }else{ break; }
+    } else { break; }
   }
   struct thread * current = thread_current();
   if(thread_mlfqs){

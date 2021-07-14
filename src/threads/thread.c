@@ -255,7 +255,7 @@ thread_unblock (struct thread *t)
   ASSERT (t->status == THREAD_BLOCKED);
   list_insert_ordered (&ready_list, &t->elem,priority_compare,NULL);
   t->status = THREAD_READY;
-  if (thread_current() != idle_thread && thread_current()->priority < t->priority)
+  if (thread_current() != idle_thread && thread_current()->virtualPriority < t->virtualPriority)
   {
   // Check if there is external interrupt ->> yield just before returning from the interrupt
   // if not ->> yield now
@@ -371,23 +371,23 @@ thread_set_priority (int new_priority)
   if(thread_current() -> priority == thread_current()-> virtualPriority){
     thread_current()-> virtualPriority = new_priority;
   }else{
-    if(new_priority>thread_current()-> virtualPriority){
+    if(new_priority > thread_current()-> virtualPriority){
        thread_current()-> virtualPriority = new_priority;
     }
   }
   thread_current ()-> priority = new_priority;
   list_sort(&ready_list,priority_compare,NULL);
 
-  if(thread_current()->virtualPriority < list_entry( list_begin(&ready_list),struct thread , elem ) -> virtualPriority){
+  //if(thread_current()->virtualPriority < list_entry( list_begin(&ready_list),struct thread , elem ) -> virtualPriority){
     thread_yield();
-  }
+  //}
 }
 
 /* Returns the current thread's priority. */
 int
 thread_get_priority (void) 
 {
-  return thread_current ()->priority;
+  return thread_current ()->virtualPriority;
 }
 
 /* Sets the current thread's nice value to NICE. */
